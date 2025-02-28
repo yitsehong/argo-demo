@@ -1,0 +1,44 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+
+namespace: argo-test
+
+labels:
+  - pairs:
+      app: demo
+    includeSelectors: true # <-- false by default
+    includeTemplates: true
+
+patches:
+  - path: volume.yaml
+  - path: replicas.yaml
+  - path: resources.yaml
+  - path: volumemount.yaml
+  - target:
+      kind: Deployment
+      name: .*
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: helloworld
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/name
+        value: helloworld
+  - target: 
+      kind: Deployment
+    options:
+      allowNameChange: true
+    path: deployment.yaml
+
+secretGenerator:
+  - name: config-secret
+    options:
+      annotations:
+        avp.kubernetes.io/path: "argocd/demo"
+    files:
+    - demo.yaml

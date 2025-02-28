@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: default
+  template:
+    metadata:
+      labels:
+        app: default
+    spec:
+      containers:
+      - name: defaultcontainer
+        image: ecr_name:tag
+        imagePullPolicy: Always
+        env:
+          - name: MESSAGE
+            value: "demo"
+

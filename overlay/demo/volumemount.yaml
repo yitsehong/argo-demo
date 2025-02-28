@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: default
+spec:
+  template:
+    spec:
+      containers:
+        - name: defaultcontainer
+          volumeMounts:
+          - name: config-secret
+            mountPath: /app/demo.yaml
+            readOnly: true
+            subPath: demo.yaml
